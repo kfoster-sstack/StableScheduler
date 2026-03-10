@@ -77,12 +77,18 @@
             switchAuthTab('signup');
         }
 
-        // Tab switching
-        tabs.forEach(function (tab) {
-            tab.addEventListener('click', function () {
-                switchAuthTab(this.getAttribute('data-tab'));
+        // Tab switching — use event delegation on container for reliability
+        var tabContainer = document.getElementById('authTabs');
+        if (tabContainer) {
+            tabContainer.addEventListener('click', function (e) {
+                var tab = e.target.closest('.auth-tab');
+                if (tab) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    switchAuthTab(tab.getAttribute('data-tab'));
+                }
             });
-        });
+        }
 
         function switchAuthTab(tabName) {
             tabs.forEach(function (t) {
@@ -114,7 +120,11 @@
                 if (result.error) throw result.error;
                 window.location.href = 'dashboard.html';
             } catch (err) {
-                showError('authError', err.message || 'Login failed. Please try again.');
+                var msg = err.message || 'Login failed. Please try again.';
+                if (msg.toLowerCase().indexOf('invalid login credentials') !== -1) {
+                    msg = 'Invalid email or password. Don\'t have an account yet? Click the "Sign Up" tab above to create one.';
+                }
+                showError('authError', msg);
                 btn.disabled = false;
                 btn.textContent = 'Log In';
             }
