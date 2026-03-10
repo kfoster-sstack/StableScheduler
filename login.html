@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In — StableScheduler</title>
+    <meta name="description" content="Log in to StableScheduler to manage your barn's lessons, staff shifts, and daily tasks.">
+    <link rel="canonical" href="https://stablescheduler.com/login">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .auth-page { min-height: 100vh; display: flex; flex-direction: column; }
+        .auth-container {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 40px 24px; background: #F8FAFC;
+        }
+        .auth-card {
+            background: var(--white); border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg); max-width: 420px; width: 100%; overflow: hidden;
+        }
+        .auth-header { text-align: center; padding: 32px 32px 0; }
+        .auth-header .logo-icon { width: 48px; height: 48px; font-size: 1.1rem; margin: 0 auto 12px; }
+        .auth-header h1 { font-size: 1.4rem; color: var(--navy); margin-bottom: 4px; }
+        .auth-header p { font-size: 0.88rem; color: var(--text-light); }
+        .auth-tabs {
+            display: flex; margin: 24px 32px 0; border-bottom: 2px solid var(--border);
+        }
+        .auth-tab {
+            flex: 1; padding: 10px; text-align: center; font-weight: 600; font-size: 0.9rem;
+            color: var(--text-light); background: none; border: none;
+            border-bottom: 2px solid transparent; margin-bottom: -2px;
+            cursor: pointer; transition: all var(--transition); font-family: var(--font-stack);
+        }
+        .auth-tab:hover { color: var(--navy); }
+        .auth-tab.active { color: var(--coral); border-bottom-color: var(--coral); }
+        .auth-body { padding: 24px 32px 32px; }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
+        .auth-form .form-group { margin-bottom: 16px; }
+        .auth-form .form-group label {
+            display: block; font-weight: 600; font-size: 0.82rem;
+            color: var(--navy); margin-bottom: 5px;
+        }
+        .auth-form .form-group input {
+            width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+            border-radius: var(--radius); font-size: 0.95rem;
+            transition: border-color var(--transition);
+        }
+        .auth-form .form-group input:focus {
+            outline: none; border-color: var(--coral);
+            box-shadow: 0 0 0 3px rgba(224,112,64,.08);
+        }
+        .auth-submit {
+            width: 100%; padding: 12px; background: var(--coral); color: var(--white);
+            border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all var(--transition); font-family: var(--font-stack);
+        }
+        .auth-submit:hover { background: var(--coral-hover); }
+        .auth-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .auth-links { text-align: center; margin-top: 16px; font-size: 0.82rem; }
+        .auth-links a { color: var(--coral); font-weight: 500; }
+        .auth-links a:hover { text-decoration: underline; }
+        .auth-divider {
+            display: flex; align-items: center; gap: 12px; margin: 20px 0;
+            color: var(--text-light); font-size: 0.78rem;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .magic-link-btn {
+            width: 100%; padding: 10px; background: var(--white);
+            border: 1.5px solid var(--border); border-radius: var(--radius);
+            font-size: 0.88rem; font-weight: 500; color: var(--text-dark);
+            cursor: pointer; transition: all var(--transition); font-family: var(--font-stack);
+        }
+        .magic-link-btn:hover {
+            border-color: var(--coral); background: var(--coral-light); color: var(--coral);
+        }
+        .auth-error {
+            background: rgba(196,30,58,.08); color: var(--red);
+            padding: 10px 14px; border-radius: var(--radius);
+            font-size: 0.82rem; margin-bottom: 16px; display: none;
+        }
+        .auth-error.show { display: block; }
+        .auth-success {
+            background: rgba(34,197,94,.08); color: #166534;
+            padding: 10px 14px; border-radius: var(--radius);
+            font-size: 0.82rem; margin-bottom: 16px; display: none;
+        }
+        .auth-success.show { display: block; }
+        .forgot-panel { display: none; padding: 24px 32px 32px; }
+        .forgot-panel.active { display: block; }
+        .forgot-panel h3 { font-size: 1.1rem; color: var(--navy); margin-bottom: 6px; }
+        .forgot-panel p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 4px; font-size: 0.82rem;
+            color: var(--coral); font-weight: 500; cursor: pointer;
+            background: none; border: none; padding: 0; margin-top: 16px;
+            font-family: var(--font-stack);
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="auth-page">
+
+<!-- Network Top Bar -->
+<div class="network-bar">
+    Part of the Schneider Saddlery Equine Network &mdash; Shop <a href="https://sstack.com" target="_blank" rel="noopener">sstack.com</a>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="site-logo">
+            <div class="logo-icon">SS</div>
+            <div class="logo-text">
+                Stable<span>Scheduler</span>
+                <span class="logo-sub">by Schneider Saddlery</span>
+            </div>
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Auth Container -->
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="logo-icon">SS</div>
+            <h1>Welcome to StableScheduler</h1>
+            <p>Free barn scheduling for your entire team</p>
+        </div>
+
+        <!-- Login / Signup Tabs -->
+        <div class="auth-tabs" id="authTabs">
+            <button class="auth-tab active" data-tab="login">Log In</button>
+            <button class="auth-tab" data-tab="signup">Sign Up</button>
+        </div>
+
+        <!-- Auth Forms -->
+        <div class="auth-body" id="authBody">
+            <div id="authError" class="auth-error"></div>
+            <div id="authSuccess" class="auth-success"></div>
+
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="you@yourbarn.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Your password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="auth-submit" id="loginBtn">Log In</button>
+                <div class="auth-links">
+                    <a href="#" id="forgotLink">Forgot password?</a>
+                </div>
+                <div class="auth-divider">or</div>
+                <button type="button" class="magic-link-btn" id="magicLinkBtn">Send me a magic link</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="you@yourbarn.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirm">Confirm Password</label>
+                    <input type="password" id="signupConfirm" placeholder="Confirm your password" required minlength="6" autocomplete="new-password">
+                </div>
+                <button type="submit" class="auth-submit" id="signupBtn">Create Free Account</button>
+                <p style="text-align:center;font-size:0.75rem;color:var(--text-light);margin-top:12px;">
+                    By signing up you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.
+                </p>
+            </form>
+        </div>
+
+        <!-- Forgot Password Panel -->
+        <div class="forgot-panel" id="forgotPanel">
+            <h3>Reset Your Password</h3>
+            <p>Enter your email and we'll send you a reset link.</p>
+            <div id="forgotError" class="auth-error"></div>
+            <div id="forgotSuccess" class="auth-success"></div>
+            <form id="forgotForm">
+                <div class="form-group">
+                    <label for="forgotEmail">Email</label>
+                    <input type="email" id="forgotEmail" placeholder="you@yourbarn.com" required autocomplete="email">
+                </div>
+                <button type="submit" class="auth-submit">Send Reset Link</button>
+            </form>
+            <button class="back-link" id="backToLogin">&larr; Back to login</button>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-bottom" style="border-top:none;padding-top:0;">
+            <p>&copy; 2026 StableScheduler. Powered by Schneider Saddlery | <a href="https://sstack.com" target="_blank" rel="noopener">sstack.com</a></p>
+            <p class="footer-tagline">Horses Define Who We Are&trade;</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

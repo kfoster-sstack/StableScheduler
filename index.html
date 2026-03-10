@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StableScheduler - Free Barn Scheduling Tool | Schneider Saddlery Equine Network</title>
+    <meta name="description" content="Free scheduling tool for barn staff, riding lessons, and daily tasks. Manage your equine facility with StableScheduler, part of the Schneider Saddlery Equine Network.">
+    <meta name="keywords" content="barn scheduling, lesson scheduling, horse barn management, staff scheduling, equine facility management, riding lessons, barn tasks">
+    <link rel="canonical" href="https://stablescheduler.com/">
+    <meta property="og:title" content="StableScheduler - Free Barn Scheduling Tool">
+    <meta property="og:description" content="Stop texting, start scheduling. Free barn scheduling for lessons, staff shifts, and daily tasks.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://stablescheduler.com/">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Network Top Bar -->
+<div class="network-bar">
+    Part of the Schneider Saddlery Equine Network &mdash; Shop <a href="https://sstack.com" target="_blank" rel="noopener">sstack.com</a>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="site-logo">
+            <div class="logo-icon">SS</div>
+            <div class="logo-text">
+                Stable<span>Scheduler</span>
+                <span class="logo-sub">by Schneider Saddlery</span>
+            </div>
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Toggle navigation">&#9776;</button>
+        <nav>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="login.html" id="navLaunchApp">Log In</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section — Calendar Header Style with side-by-side layout -->
+<section class="hero" id="hero">
+    <div class="hero-inner">
+        <div class="hero-top-row">
+            <div class="hero-text">
+                <h1>Stop Texting, Start Scheduling &mdash; <em>Free Barn Scheduling Tool</em></h1>
+                <p>Organize lessons, coordinate staff shifts, and track daily barn tasks in one simple tool. Built for barns, by horse people.</p>
+                <a href="#signup" class="hero-cta">Get Started Free &darr;</a>
+            </div>
+            <!-- Calendar Widget Preview -->
+            <div class="hero-calendar">
+                <div class="calendar-widget">
+                    <div class="calendar-header">
+                        <h3>This Week</h3>
+                        <div class="calendar-view-toggle">
+                            <button class="calendar-view-btn">Day</button>
+                            <button class="calendar-view-btn active">Week</button>
+                            <button class="calendar-view-btn">Month</button>
+                        </div>
+                    </div>
+                    <div class="calendar-days">
+                        <div class="cal-day-header"></div>
+                        <div class="cal-day-header">Mon</div>
+                        <div class="cal-day-header today">Tue</div>
+                        <div class="cal-day-header">Wed</div>
+                        <div class="cal-day-header">Thu</div>
+                        <div class="cal-day-header">Fri</div>
+                    </div>
+                    <div class="calendar-body">
+                        <div class="cal-time">9 AM</div>
+                        <div class="cal-slot"><div class="cal-event blue">Sarah M.<br>Private</div></div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot"><div class="cal-event green">Group<br>3 Riders</div></div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot"><div class="cal-event blue">Sarah M.<br>Private</div></div>
+
+                        <div class="cal-time">10 AM</div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot"><div class="cal-event orange">Jake R.<br>Semi-Priv</div></div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot"><div class="cal-event orange">Jake R.<br>Semi-Priv</div></div>
+                        <div class="cal-slot empty-slot"></div>
+
+                        <div class="cal-time">11 AM</div>
+                        <div class="cal-slot"><div class="cal-event green">Group<br>4 Riders</div></div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot"><div class="cal-event purple">Lily K.<br>Private</div></div>
+                        <div class="cal-slot"><div class="cal-event green">Group<br>3 Riders</div></div>
+
+                        <div class="cal-time">12 PM</div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot empty-slot"></div>
+                        <div class="cal-slot empty-slot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Schedule Timeline -->
+        <div class="todays-schedule">
+            <div class="today-header">
+                <h2><span class="today-dot"></span> Today's Schedule</h2>
+                <span class="today-date">Tuesday, February 3</span>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item active">
+                    <span class="timeline-time">6:00 AM</span>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Morning Feed</h4>
+                        <p>All horses &mdash; Hay, grain, supplements</p>
+                        <span class="staff-tag">Mike J.</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-time">8:00 AM</span>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Turnout &mdash; Group A</h4>
+                        <p>North pasture &mdash; 6 horses</p>
+                        <span class="staff-tag">Sarah K.</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-time">9:00 AM</span>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Private Lesson &mdash; Sarah Miller</h4>
+                        <p>Indoor Arena &mdash; Horse: Bella</p>
+                        <span class="staff-tag">Coach Kim</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-time">11:00 AM</span>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Group Lesson</h4>
+                        <p>Outdoor Ring &mdash; 4 Riders</p>
+                        <span class="staff-tag">Coach Kim</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Staff Color Coding Section -->
+<section class="staff-color-section">
+    <div class="staff-color-inner">
+        <h2 class="section-title">Color-Coded Staff Assignments</h2>
+        <p class="section-subtitle">Every staff member gets a unique color for instant visual identification on the schedule.</p>
+        <div class="staff-colors">
+            <div class="staff-color-chip"><div class="staff-color-swatch" style="background:#3498db;"></div> Coach Kim</div>
+            <div class="staff-color-chip"><div class="staff-color-swatch" style="background:#2ecc71;"></div> Sarah K.</div>
+            <div class="staff-color-chip"><div class="staff-color-swatch" style="background:#f39c12;"></div> Mike J.</div>
+            <div class="staff-color-chip"><div class="staff-color-swatch" style="background:#9b59b6;"></div> Lisa M.</div>
+            <div class="staff-color-chip"><div class="staff-color-swatch" style="background:#E07040;"></div> Tom W.</div>
+        </div>
+    </div>
+</section>
+
+<!-- Facility Allocation Section -->
+<section class="facility-section">
+    <div class="facility-inner">
+        <h2 class="section-title">Facility &amp; Arena Allocation</h2>
+        <p class="section-subtitle">See at a glance which arenas and facilities are booked or available.</p>
+        <div class="facility-grid">
+            <div class="facility-card">
+                <div class="facility-icon">&#127968;</div>
+                <h4>Indoor Arena</h4>
+                <p>60m x 20m covered ring</p>
+                <span class="facility-status in-use">In Use &mdash; 9:00 AM</span>
+            </div>
+            <div class="facility-card">
+                <div class="facility-icon">&#127795;</div>
+                <h4>Outdoor Ring</h4>
+                <p>80m x 40m sand ring</p>
+                <span class="facility-status available">Available</span>
+            </div>
+            <div class="facility-card">
+                <div class="facility-icon">&#128029;</div>
+                <h4>Round Pen</h4>
+                <p>20m diameter training pen</p>
+                <span class="facility-status available">Available</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="features-inner">
+        <h2 class="section-title">Everything Your Barn Needs</h2>
+        <p class="section-subtitle">Three powerful tools in one simple interface. Free forever, no credit card required.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon lessons">&#128218;</div>
+                <h3>Lesson Scheduling</h3>
+                <p>Weekly calendar with color-coded lessons by instructor. Track students, horses, lesson types, and catch conflicts before they happen.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon staff">&#128101;</div>
+                <h3>Staff Shifts</h3>
+                <p>Assign staff to feeding, mucking, turnout, and more. Pre-built shift templates for common barn schedules. Track weekly hours automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon tasks">&#9745;</div>
+                <h3>Daily Task Board</h3>
+                <p>Pre-loaded daily checklists for AM/PM routines. Add custom tasks, mark complete with timestamps, and reset each day.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo / Screenshot Section -->
+<section class="demo-section" id="demo">
+    <div class="demo-inner">
+        <h2 class="section-title">See It In Action</h2>
+        <p class="section-subtitle">A clean, simple interface designed for busy barn managers.</p>
+        <div class="demo-preview">
+            <div class="demo-browser-bar">
+                <div class="demo-dot red"></div>
+                <div class="demo-dot yellow"></div>
+                <div class="demo-dot green"></div>
+                <div class="demo-url">stablescheduler.com</div>
+            </div>
+            <div class="demo-content">
+                <div class="demo-tabs-preview">
+                    <button class="demo-tab-btn active">Lessons</button>
+                    <button class="demo-tab-btn">Staff</button>
+                    <button class="demo-tab-btn">Tasks</button>
+                </div>
+                <div class="demo-grid-preview">
+                    <div class="demo-grid-cell header"></div>
+                    <div class="demo-grid-cell header">Mon</div>
+                    <div class="demo-grid-cell header">Tue</div>
+                    <div class="demo-grid-cell header">Wed</div>
+                    <div class="demo-grid-cell header">Thu</div>
+                    <div class="demo-grid-cell header">Fri</div>
+
+                    <div class="demo-grid-cell time">9:00 AM</div>
+                    <div class="demo-grid-cell"><div class="demo-lesson-block">Sarah M. - Private<br>Horse: Bella</div></div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"><div class="demo-lesson-block green">Group Lesson<br>3 Riders</div></div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"><div class="demo-lesson-block">Sarah M. - Private<br>Horse: Bella</div></div>
+
+                    <div class="demo-grid-cell time">10:00 AM</div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"><div class="demo-lesson-block orange">Jake R. - Semi-Priv<br>Horse: Thunder</div></div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"><div class="demo-lesson-block orange">Jake R. - Semi-Priv<br>Horse: Thunder</div></div>
+                    <div class="demo-grid-cell"></div>
+
+                    <div class="demo-grid-cell time">11:00 AM</div>
+                    <div class="demo-grid-cell"><div class="demo-lesson-block green">Group Lesson<br>4 Riders</div></div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"><div class="demo-lesson-block">Lily K. - Private<br>Horse: Daisy</div></div>
+                    <div class="demo-grid-cell"><div class="demo-lesson-block green">Group Lesson<br>3 Riders</div></div>
+
+                    <div class="demo-grid-cell time">12:00 PM</div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"></div>
+                    <div class="demo-grid-cell"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Signup CTA Section -->
+<section class="signup-section" id="signup">
+    <div class="signup-inner">
+        <h2>Ready to Get Organized?</h2>
+        <p>Create your free account. Your barn's schedule, synced across all your devices.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;">
+            <a href="login.html?tab=signup" class="hero-cta" style="text-decoration:none;">Create Free Account</a>
+            <a href="login.html" class="hero-cta" style="text-decoration:none;background:transparent;border:2px solid rgba(255,255,255,.4);color:var(--white);">Log In</a>
+        </div>
+        <p class="signup-note">Free forever. No credit card required.</p>
+    </div>
+</section>
+
+<!-- Quick-add FAB hint -->
+<button class="fab-hint" title="Get started" onclick="window.location.href='login.html?tab=signup'">+</button>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo-text">Stable<span>Scheduler</span></div>
+                <p>A free scheduling tool for equine facilities. Organize lessons, manage staff, and streamline daily barn operations.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Use</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Network</h4>
+                <ul>
+                    <li><a href="https://sstack.com" target="_blank" rel="noopener">sstack.com</a></li>
+                    <li><a href="https://schneidersaddlery.com" target="_blank" rel="noopener">Schneider Saddlery</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 StableScheduler. Powered by Schneider Saddlery | <a href="https://sstack.com" target="_blank" rel="noopener">sstack.com</a></p>
+            <p class="footer-tagline">Horses Define Who We Are&trade;</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

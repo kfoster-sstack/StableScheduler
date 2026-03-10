@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — StableScheduler</title>
+    <meta name="robots" content="noindex">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-body">
+
+<!-- Top Header -->
+<header class="dash-header">
+    <div style="display:flex;align-items:center;gap:12px;">
+        <button class="dash-menu-toggle" id="menuToggle">&#9776;</button>
+        <a href="index.html" class="site-logo">
+            <div class="logo-icon">SS</div>
+            <div class="logo-text">
+                Stable<span>Scheduler</span>
+            </div>
+        </a>
+    </div>
+    <div class="dash-header-right">
+        <span class="barn-name-display" id="barnNameDisplay">My Barn</span>
+        <button class="dash-logout" onclick="ssLogout()">Log Out</button>
+    </div>
+</header>
+
+<div class="dash-layout">
+    <!-- Sidebar -->
+    <nav class="dash-sidebar" id="sidebar">
+        <ul class="sidebar-nav">
+            <li><a href="#overview" data-page="overview" class="active"><span class="nav-icon">&#128202;</span> Overview</a></li>
+            <li><a href="#lessons" data-page="lessons"><span class="nav-icon">&#128218;</span> Lessons</a></li>
+            <li><a href="#staff" data-page="staff"><span class="nav-icon">&#128101;</span> Staff Shifts</a></li>
+            <li><a href="#tasks" data-page="tasks"><span class="nav-icon">&#9745;</span> Daily Tasks</a></li>
+            <li><div class="sidebar-divider"></div></li>
+            <li><a href="#settings" data-page="settings"><span class="nav-icon">&#9881;</span> Settings</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            Powered by Schneider Saddlery<br>sstack.com
+        </div>
+    </nav>
+
+    <!-- Mobile backdrop -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Main Content -->
+    <main class="dash-content" id="dashContent">
+
+        <!-- Full-page loading -->
+        <div class="page-loading" id="pageLoading">
+            <div class="spinner"></div>
+            <p>Loading your schedule...</p>
+        </div>
+
+        <!-- ===== OVERVIEW PAGE ===== -->
+        <section class="dash-page active" id="page-overview">
+            <h2 class="page-title">Dashboard</h2>
+            <div class="overview-stats" id="overviewStats">
+                <div class="stat-card">
+                    <div class="stat-label">Today's Lessons</div>
+                    <div class="stat-value" id="statLessons">-</div>
+                    <div class="stat-detail" id="statLessonsDetail">Loading...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Staff on Duty</div>
+                    <div class="stat-value" id="statStaff">-</div>
+                    <div class="stat-detail" id="statStaffDetail">Loading...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tasks Complete</div>
+                    <div class="stat-value" id="statTasks">-</div>
+                    <div class="stat-detail" id="statTasksDetail">Loading...</div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <button class="btn btn-primary" id="overviewAddLesson">+ Add Lesson</button>
+                <button class="btn btn-primary" id="overviewAddShift">+ Add Shift</button>
+            </div>
+
+            <div class="overview-section">
+                <div class="overview-section-header">
+                    <h3>Today's Lessons</h3>
+                    <span class="task-date" id="overviewDate"></span>
+                </div>
+                <div class="overview-section-body" id="overviewLessons">
+                    <div class="loading-state"><div class="spinner"></div></div>
+                </div>
+            </div>
+
+            <div class="overview-section">
+                <div class="overview-section-header">
+                    <h3>Staff on Duty Today</h3>
+                </div>
+                <div class="overview-section-body" id="overviewShifts">
+                    <div class="loading-state"><div class="spinner"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LESSONS PAGE ===== -->
+        <section class="dash-page" id="page-lessons">
+            <h2 class="page-title">Lesson Schedule</h2>
+            <div class="schedule-controls">
+                <div class="view-toggle">
+                    <button class="active" data-view="weekly" id="viewWeekly">Weekly</button>
+                    <button data-view="daily" id="viewDaily">Daily</button>
+                </div>
+                <div class="week-nav">
+                    <button id="lessonPrevWeek">&larr; Prev</button>
+                    <span id="lessonWeekLabel">Week of ...</span>
+                    <button id="lessonNextWeek">Next &rarr;</button>
+                    <button id="lessonToday" class="btn-sm btn-outline">Today</button>
+                </div>
+                <button class="btn btn-primary" id="btnAddLesson">+ Add Lesson</button>
+            </div>
+
+            <div class="schedule-controls" id="daySelector" style="display:none;">
+                <div class="view-toggle">
+                    <button data-day="0" class="active">Mon</button>
+                    <button data-day="1">Tue</button>
+                    <button data-day="2">Wed</button>
+                    <button data-day="3">Thu</button>
+                    <button data-day="4">Fri</button>
+                    <button data-day="5">Sat</button>
+                    <button data-day="6">Sun</button>
+                </div>
+            </div>
+
+            <div class="schedule-grid-wrapper">
+                <div class="schedule-grid weekly" id="lessonGrid">
+                    <div class="loading-state"><div class="spinner"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== STAFF PAGE ===== -->
+        <section class="dash-page" id="page-staff">
+            <h2 class="page-title">Staff Shifts</h2>
+            <div class="schedule-controls">
+                <div>
+                    <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:8px;font-weight:600;">Quick Add Shift Template:</p>
+                    <div class="shift-templates">
+                        <button class="template-btn" data-template="morning-feed">Morning Feed (5:30-7:00)</button>
+                        <button class="template-btn" data-template="am-barn">AM Barn (7:00-12:00)</button>
+                        <button class="template-btn" data-template="pm-barn">PM Barn (12:00-5:00)</button>
+                        <button class="template-btn" data-template="evening-feed">Evening Feed (5:00-6:30)</button>
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="btnAddShift">+ Add Shift</button>
+            </div>
+
+            <div class="schedule-controls">
+                <div class="week-nav">
+                    <button id="staffPrevWeek">&larr; Prev</button>
+                    <span id="staffWeekLabel">Week of ...</span>
+                    <button id="staffNextWeek">Next &rarr;</button>
+                    <button id="staffToday" class="btn-sm btn-outline">Today</button>
+                </div>
+            </div>
+
+            <div class="schedule-grid-wrapper">
+                <div class="schedule-grid weekly" id="staffGrid">
+                    <div class="loading-state"><div class="spinner"></div></div>
+                </div>
+            </div>
+
+            <div class="staff-summary" id="staffSummary">
+                <h3>Weekly Hours Summary</h3>
+                <table class="staff-summary-table">
+                    <thead>
+                        <tr>
+                            <th>Staff Member</th>
+                            <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffSummaryBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== TASKS PAGE ===== -->
+        <section class="dash-page" id="page-tasks">
+            <h2 class="page-title">Daily Task Board</h2>
+            <div class="schedule-controls">
+                <div class="week-nav">
+                    <button id="taskPrevDay">&larr; Prev Day</button>
+                    <span id="taskDateLabel">Today</span>
+                    <button id="taskNextDay">Next Day &rarr;</button>
+                    <button id="taskTodayBtn" class="btn-sm btn-outline">Today</button>
+                </div>
+                <button class="btn btn-danger" id="btnResetTasks">Reset Tasks</button>
+            </div>
+
+            <div class="task-board">
+                <div class="task-board-header">
+                    <h3>Daily Barn Checklist</h3>
+                    <span class="task-date" id="taskBoardDate"></span>
+                </div>
+                <div class="task-progress" id="taskProgress">
+                    <span class="progress-text" id="progressText">0 of 0 tasks complete</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+                    </div>
+                </div>
+                <ul class="task-list" id="taskList">
+                    <div class="loading-state"><div class="spinner"></div></div>
+                </ul>
+                <div class="add-task-form">
+                    <input type="text" id="newTaskInput" placeholder="Add a custom task...">
+                    <button class="btn btn-primary" id="btnAddTask">Add</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SETTINGS PAGE ===== -->
+        <section class="dash-page" id="page-settings">
+            <h2 class="page-title">Settings</h2>
+
+            <!-- Barn Profile -->
+            <div class="settings-section">
+                <div class="settings-section-header"><h3>Barn Profile</h3></div>
+                <div class="settings-section-body">
+                    <div class="settings-row">
+                        <label for="settingsBarnName">Barn Name</label>
+                        <input type="text" id="settingsBarnName" placeholder="e.g., Maple Ridge Farm">
+                        <button class="btn btn-primary btn-sm" id="saveBarnName">Save</button>
+                    </div>
+                    <div class="settings-row" style="margin-top:8px;">
+                        <label>Email</label>
+                        <span id="settingsEmail" style="font-size:0.88rem;color:var(--text-light);"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Instructors -->
+            <div class="settings-section">
+                <div class="settings-section-header"><h3>Manage Instructors</h3></div>
+                <div class="settings-section-body">
+                    <ul class="managed-list" id="instructorList"></ul>
+                    <div class="add-item-row">
+                        <input type="text" id="newInstructorInput" placeholder="Add instructor name...">
+                        <button class="btn btn-primary btn-sm" id="addInstructorBtn">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Horses -->
+            <div class="settings-section">
+                <div class="settings-section-header"><h3>Manage Horses</h3></div>
+                <div class="settings-section-body">
+                    <ul class="managed-list" id="horseList"></ul>
+                    <div class="add-item-row">
+                        <input type="text" id="newHorseInput" placeholder="Add horse name...">
+                        <button class="btn btn-primary btn-sm" id="addHorseBtn">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Staff Members -->
+            <div class="settings-section">
+                <div class="settings-section-header"><h3>Manage Staff Members</h3></div>
+                <div class="settings-section-body">
+                    <ul class="managed-list" id="staffMemberList"></ul>
+                    <div class="add-item-row">
+                        <input type="text" id="newStaffMemberInput" placeholder="Add staff member name...">
+                        <button class="btn btn-primary btn-sm" id="addStaffMemberBtn">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import from localStorage -->
+            <div class="settings-section">
+                <div class="settings-section-header"><h3>Import Data</h3></div>
+                <div class="settings-section-body">
+                    <div class="import-section">
+                        <p>If you used StableScheduler before creating an account, you can import your existing data from this browser.</p>
+                        <button class="btn" id="importBtn">Import Local Data</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Print & Export -->
+            <div class="settings-section">
+                <div class="settings-section-header"><h3>Print &amp; Export</h3></div>
+                <div class="settings-section-body">
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn" id="btnPrint">&#128424; Print Schedule</button>
+                        <button class="btn" id="btnExport">&#128196; Export HTML</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="settings-section danger-zone">
+                <div class="settings-section-header"><h3>Danger Zone</h3></div>
+                <div class="settings-section-body">
+                    <button class="btn btn-danger" id="deleteAccountBtn">Delete My Account</button>
+                    <p style="font-size:0.78rem;color:var(--text-light);margin-top:8px;">This will permanently delete your account and all data. This cannot be undone.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Add/Edit Lesson Modal -->
+<div class="modal-overlay" id="lessonModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="lessonModalTitle">Add Lesson</h3>
+            <button class="modal-close" data-close="lessonModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="lessonForm">
+                <input type="hidden" id="lessonId">
+                <div class="form-group">
+                    <label for="lessonStudent">Student Name *</label>
+                    <input type="text" id="lessonStudent" required placeholder="e.g., Sarah Miller">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lessonHorse">Horse Assigned *</label>
+                        <input type="text" id="lessonHorse" required placeholder="e.g., Bella">
+                    </div>
+                    <div class="form-group">
+                        <label for="lessonInstructor">Instructor *</label>
+                        <input type="text" id="lessonInstructor" required placeholder="e.g., Coach Kim">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lessonType">Lesson Type</label>
+                        <select id="lessonType">
+                            <option value="private">Private</option>
+                            <option value="semi-private">Semi-Private</option>
+                            <option value="group">Group</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lessonDuration">Duration</label>
+                        <select id="lessonDuration">
+                            <option value="30">30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60" selected>60 minutes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lessonDay">Day *</label>
+                        <select id="lessonDay" required>
+                            <option value="0">Monday</option>
+                            <option value="1">Tuesday</option>
+                            <option value="2">Wednesday</option>
+                            <option value="3">Thursday</option>
+                            <option value="4">Friday</option>
+                            <option value="5">Saturday</option>
+                            <option value="6">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lessonTime">Start Time *</label>
+                        <select id="lessonTime" required></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lessonRecurring">
+                        <input type="checkbox" id="lessonRecurring" style="width:auto;margin-right:6px;">
+                        Recurring weekly
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="lessonNotes">Notes</label>
+                    <textarea id="lessonNotes" placeholder="Any special instructions or notes..."></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-close="lessonModal">Cancel</button>
+            <button class="btn btn-danger" id="btnDeleteLesson" style="display:none;">Delete</button>
+            <button class="btn btn-primary" id="btnSaveLesson">Save Lesson</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Staff Shift Modal -->
+<div class="modal-overlay" id="shiftModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="shiftModalTitle">Add Shift</h3>
+            <button class="modal-close" data-close="shiftModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="shiftForm">
+                <input type="hidden" id="shiftId">
+                <div class="form-group">
+                    <label for="shiftStaff">Staff Member *</label>
+                    <input type="text" id="shiftStaff" required placeholder="e.g., Mike Johnson">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="shiftDay">Day *</label>
+                        <select id="shiftDay" required>
+                            <option value="0">Monday</option>
+                            <option value="1">Tuesday</option>
+                            <option value="2">Wednesday</option>
+                            <option value="3">Thursday</option>
+                            <option value="4">Friday</option>
+                            <option value="5">Saturday</option>
+                            <option value="6">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="shiftRole">Role *</label>
+                        <select id="shiftRole" required>
+                            <option value="feeding">Feeding</option>
+                            <option value="mucking">Mucking</option>
+                            <option value="turnout">Turnout</option>
+                            <option value="lessons">Lessons</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="office">Office</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="shiftStart">Start Time *</label>
+                        <input type="time" id="shiftStart" required value="07:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="shiftEnd">End Time *</label>
+                        <input type="time" id="shiftEnd" required value="12:00">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-close="shiftModal">Cancel</button>
+            <button class="btn btn-danger" id="btnDeleteShift" style="display:none;">Delete</button>
+            <button class="btn btn-primary" id="btnSaveShift">Save Shift</button>
+        </div>
+    </div>
+</div>
+
+<!-- Print Container -->
+<div class="print-container" id="printContainer"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/db.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
