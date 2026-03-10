@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmed — StableScheduler</title>
+    <meta name="description" content="Your email has been confirmed. Welcome to StableScheduler.">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .auth-page { min-height: 100vh; display: flex; flex-direction: column; }
+        .confirm-container {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 40px 24px; background: #F8FAFC;
+        }
+        .confirm-card {
+            background: var(--white); border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg); max-width: 480px; width: 100%;
+            text-align: center; padding: 48px 40px;
+        }
+        .confirm-card .logo-icon {
+            width: 56px; height: 56px; font-size: 1.2rem;
+            margin: 0 auto 20px;
+        }
+        .confirm-card h1 {
+            font-size: 1.5rem; color: var(--navy); margin-bottom: 8px;
+        }
+        .confirm-card .subtitle {
+            font-size: 0.95rem; color: var(--text-light); margin-bottom: 28px;
+        }
+        .confirm-status {
+            padding: 16px 20px; border-radius: var(--radius);
+            font-size: 0.9rem; margin-bottom: 24px;
+        }
+        .confirm-status.success {
+            background: rgba(34,197,94,.08); color: #166534;
+        }
+        .confirm-status.error {
+            background: rgba(196,30,58,.08); color: var(--red);
+        }
+        .confirm-status.loading {
+            background: rgba(27,42,74,.06); color: var(--navy);
+        }
+        .countdown {
+            font-size: 0.88rem; color: var(--text-light); margin-bottom: 24px;
+        }
+        .countdown strong {
+            color: var(--coral); font-size: 1.1rem;
+        }
+        .confirm-btn {
+            display: inline-block; padding: 12px 32px;
+            background: var(--coral); color: var(--white);
+            border: none; border-radius: var(--radius);
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all var(--transition); font-family: var(--font-stack);
+            text-decoration: none;
+        }
+        .confirm-btn:hover { background: var(--coral-hover); }
+        .checkmark {
+            width: 64px; height: 64px; margin: 0 auto 20px;
+            border-radius: 50%; background: rgba(34,197,94,.1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+        }
+        .spinner {
+            width: 40px; height: 40px; margin: 0 auto 20px;
+            border: 3px solid var(--border); border-top-color: var(--coral);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="auth-page">
+
+<!-- Network Top Bar -->
+<div class="network-bar">
+    Part of the Schneider Saddlery Equine Network &mdash; Shop <a href="https://sstack.com" target="_blank" rel="noopener">sstack.com</a>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html" class="site-logo">
+            <div class="logo-icon">SS</div>
+            <div class="logo-text">
+                Stable<span>Scheduler</span>
+                <span class="logo-sub">by Schneider Saddlery</span>
+            </div>
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Confirmation Content -->
+<div class="confirm-container">
+    <div class="confirm-card" id="confirmCard">
+        <!-- Loading state (shown first) -->
+        <div id="loadingState">
+            <div class="spinner"></div>
+            <h1>Confirming Your Email</h1>
+            <p class="subtitle">Just a moment while we verify your account...</p>
+            <div class="confirm-status loading">Connecting to StableScheduler...</div>
+        </div>
+
+        <!-- Success state (shown after confirmation) -->
+        <div id="successState" style="display:none;">
+            <div class="checkmark">&#10003;</div>
+            <h1>Email Confirmed!</h1>
+            <p class="subtitle">Your account is ready. Welcome to StableScheduler.</p>
+            <div class="confirm-status success">Your email has been verified successfully.</div>
+            <div class="countdown" id="countdown">
+                Redirecting to your dashboard in <strong id="countdownNum">5</strong> seconds...
+            </div>
+            <a href="dashboard.html" class="confirm-btn">Go to Dashboard Now</a>
+        </div>
+
+        <!-- Error state (shown if something goes wrong) -->
+        <div id="errorState" style="display:none;">
+            <div class="logo-icon" style="margin:0 auto 20px;">SS</div>
+            <h1>Confirmation Issue</h1>
+            <p class="subtitle" id="errorMessage">Something went wrong verifying your email.</p>
+            <div class="confirm-status error" id="errorDetail">Please try again or contact support.</div>
+            <a href="login.html" class="confirm-btn" style="margin-top:24px;">Go to Login</a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-bottom" style="border-top:none;padding-top:0;">
+            <p>&copy; 2026 StableScheduler. Powered by Schneider Saddlery | <a href="https://sstack.com" target="_blank" rel="noopener">sstack.com</a></p>
+            <p class="footer-tagline">Horses Define Who We Are&trade;</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script>
+(async function () {
+    'use strict';
+
+    var loadingState = document.getElementById('loadingState');
+    var successState = document.getElementById('successState');
+    var errorState = document.getElementById('errorState');
+    var errorMessage = document.getElementById('errorMessage');
+    var errorDetail = document.getElementById('errorDetail');
+
+    function showSuccess() {
+        loadingState.style.display = 'none';
+        successState.style.display = 'block';
+        startCountdown();
+    }
+
+    function showError(msg, detail) {
+        loadingState.style.display = 'none';
+        errorState.style.display = 'block';
+        if (msg) errorMessage.textContent = msg;
+        if (detail) errorDetail.textContent = detail;
+    }
+
+    function startCountdown() {
+        var count = 5;
+        var numEl = document.getElementById('countdownNum');
+        var timer = setInterval(function () {
+            count--;
+            numEl.textContent = count;
+            if (count <= 0) {
+                clearInterval(timer);
+                window.location.href = 'dashboard.html';
+            }
+        }, 1000);
+    }
+
+    // Supabase appends tokens as hash fragments after email confirmation.
+    // The client picks them up automatically via onAuthStateChange.
+    try {
+        // Check if there are auth params in the URL (hash fragments from Supabase)
+        var hash = window.location.hash;
+        if (hash && (hash.indexOf('access_token') !== -1 || hash.indexOf('type=signup') !== -1)) {
+            // Supabase client auto-detects hash params; wait for session
+            var result = await supabase.auth.getSession();
+            if (result.data.session) {
+                showSuccess();
+            } else {
+                // Session may take a moment — listen for auth state change
+                supabase.auth.onAuthStateChange(function (event, session) {
+                    if (session) {
+                        showSuccess();
+                    }
+                });
+                // Timeout after 10 seconds
+                setTimeout(function () {
+                    if (successState.style.display === 'none') {
+                        showError(
+                            'Verification is taking longer than expected.',
+                            'Your email may already be confirmed. Try logging in.'
+                        );
+                    }
+                }, 10000);
+            }
+        } else {
+            // No auth tokens in URL — check if user is already logged in
+            var result = await supabase.auth.getSession();
+            if (result.data.session) {
+                showSuccess();
+            } else {
+                showError(
+                    'No confirmation token found.',
+                    'This link may have expired. Please try signing up again or request a new confirmation email.'
+                );
+            }
+        }
+    } catch (err) {
+        showError(
+            'Something went wrong.',
+            err.message || 'Please try logging in or contact support.'
+        );
+    }
+})();
+</script>
+</body>
+</html>

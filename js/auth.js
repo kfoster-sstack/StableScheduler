@@ -70,6 +70,7 @@
         var authBody = document.getElementById('authBody');
         var forgotPanel = document.getElementById('forgotPanel');
         var authTabs = document.getElementById('authTabs');
+        var siteBase = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
 
         // Check URL param for initial tab
         var params = new URLSearchParams(window.location.search);
@@ -155,7 +156,10 @@
             try {
                 var result = await supabase.auth.signUp({
                     email: email,
-                    password: password
+                    password: password,
+                    options: {
+                        emailRedirectTo: siteBase + 'confirm.html'
+                    }
                 });
 
                 if (result.error) throw result.error;
@@ -190,7 +194,7 @@
             try {
                 var result = await supabase.auth.signInWithOtp({
                     email: email,
-                    options: { emailRedirectTo: window.location.origin + '/dashboard.html' }
+                    options: { emailRedirectTo: siteBase + 'confirm.html' }
                 });
                 if (result.error) throw result.error;
                 showSuccess('authSuccess', 'Magic link sent! Check your email.');
@@ -224,7 +228,7 @@
 
             try {
                 var result = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin + '/login.html'
+                    redirectTo: siteBase + 'login.html'
                 });
                 if (result.error) throw result.error;
                 showSuccess('forgotSuccess', 'Reset link sent! Check your email.');
